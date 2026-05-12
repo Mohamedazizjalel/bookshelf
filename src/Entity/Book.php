@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\BookRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Category; 
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
@@ -32,6 +32,9 @@ class Book
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $coverImage = null;
 
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'books')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Category $category = null;
     public function getId(): ?int
     {
         return $this->id;
@@ -108,4 +111,15 @@ class Book
 
         return $this;
     }
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+         $this->category = $category;
+          return $this;
+    }
 }
+
