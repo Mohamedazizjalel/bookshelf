@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+{% block title %}All Books{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Our Library</h1>
+
+    {# Search bar #}
+    <form method="get" action="{{ path('app_book_index') }}">
+        <input type="text" name="q" value="{{ search }}" placeholder="Search by title or author...">
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="book-grid">
+        {% for book in books %}
+        <div class="book-card">
+            {% if book.coverImage %}
+                <img src="{{ book.coverImage }}" alt="{{ book.title }}">
+            {% else %}
+                <div class="no-cover">📖</div>
+            {% endif %}
+            <h3>{{ book.title }}</h3>
+            <p>{{ book.author }}</p>
+            {% if book.category %}
+                <span class="badge">{{ book.category.name }}</span>
+            {% endif %}
+            <a href="{{ path('app_book_show', {'id': book.id}) }}">View</a>
+        </div>
+        {% else %}
+            <p>No books found.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
