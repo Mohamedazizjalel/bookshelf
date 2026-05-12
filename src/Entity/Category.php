@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
@@ -22,21 +21,13 @@ class Category
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'sefef')]
-    private ?self $category = null;
-
-    /**
-     * @var Collection<int, self>
-     */
-    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'category')]
-    private Collection $sefef;
-
-    #[ORM\Column(length: 20, nullable: true)]
-    private ?string $isbn = null;
+    
+    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'category')]
+    private Collection $books;
 
     public function __construct()
     {
-        $this->sefef = new ArrayCollection();
+        $this->books = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -52,7 +43,6 @@ class Category
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -64,61 +54,31 @@ class Category
     public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
-    public function getCategory(): ?self
+   
+    public function getBooks(): Collection
     {
-        return $this->category;
+        return $this->books;
     }
 
-    public function setCategory(?self $category): static
+    public function addBook(Book $book): static
     {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, self>
-     */
-    public function getSefef(): Collection
-    {
-        return $this->sefef;
-    }
-
-    public function addSefef(self $sefef): static
-    {
-        if (!$this->sefef->contains($sefef)) {
-            $this->sefef->add($sefef);
-            $sefef->setCategory($this);
+        if (!$this->books->contains($book)) {
+            $this->books->add($book);
+            $book->setCategory($this);
         }
-
         return $this;
     }
 
-    public function removeSefef(self $sefef): static
+    public function removeBook(Book $book): static
     {
-        if ($this->sefef->removeElement($sefef)) {
-            // set the owning side to null (unless already changed)
-            if ($sefef->getCategory() === $this) {
-                $sefef->setCategory(null);
+        if ($this->books->removeElement($book)) {
+            if ($book->getCategory() === $this) {
+                $book->setCategory(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getIsbn(): ?string
-    {
-        return $this->isbn;
-    }
-
-    public function setIsbn(?string $isbn): static
-    {
-        $this->isbn = $isbn;
-
         return $this;
     }
 }

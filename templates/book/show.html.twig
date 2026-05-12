@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="book-detail">
+        {% if book.coverImage %}
+            <img src="{{ book.coverImage }}" alt="{{ book.title }}" class="cover-large">
+        {% endif %}
+        <div class="book-info">
+            <h1>{{ book.title }}</h1>
+            <p><strong>Author:</strong> {{ book.author }}</p>
+            {% if book.isbn %}<p><strong>ISBN:</strong> {{ book.isbn }}</p>{% endif %}
+            {% if book.publishedYear %}<p><strong>Year:</strong> {{ book.publishedYear }}</p>{% endif %}
+            {% if book.category %}<p><strong>Category:</strong> {{ book.category.name }}</p>{% endif %}
+            {% if book.description %}<p>{{ book.description }}</p>{% endif %}
+
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <a href="{{ path('app_book_edit', {'id': book.id}) }}">Edit</a>
+                {{ include('book/_delete_form.html.twig') }}
+            {% endif %}
+            <a href="{{ path('app_book_index') }}">← Back to list</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
